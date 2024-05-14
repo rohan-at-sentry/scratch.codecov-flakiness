@@ -10,4 +10,6 @@ python3.12 -m venv --upgrade-deps venv
 ./venv/bin/pip-sync
 
 
+./venv/bin/pre-commit install
+
 # vim:ft=bash:

@@ -6,15 +6,54 @@
 #
 attrs==23.2.0
     # via hypothesis
+black==24.4.2
+    # via -r requirements.in
+cfgv==3.4.0
+    # via pre-commit
+click==8.1.7
+    # via black
+distlib==0.3.8
+    # via virtualenv
+filelock==3.14.0
+    # via virtualenv
 hypothesis==6.102.1
     # via -r requirements.in
+identify==2.5.36
+    # via pre-commit
 iniconfig==2.0.0
     # via pytest
+isort==5.13.2
+    # via -r requirements.in
+mypy-extensions==1.0.0
+    # via black
+nodeenv==1.8.0
+    # via
+    #   pre-commit
+    #   pyright
 packaging==24.0
-    # via pytest
+    # via
+    #   black
+    #   pytest
+pathspec==0.12.1
+    # via black
+platformdirs==4.2.1
+    # via
+    #   black
+    #   virtualenv
 pluggy==1.5.0
     # via pytest
+pre-commit==3.7.1
+    # via -r requirements.in
+pyright==1.1.362
+    # via -r requirements.in
 pytest==8.2.0
     # via -r requirements.in
+pyyaml==6.0.1
+    # via pre-commit
 sortedcontainers==2.4.0
     # via hypothesis
+virtualenv==20.26.2
+    # via pre-commit
+
+# The following packages are considered to be unsafe in a requirements file:
+# setuptools
