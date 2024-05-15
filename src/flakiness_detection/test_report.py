@@ -1,20 +1,28 @@
 from __future__ import annotations
 
 from collections.abc import Iterable
+from collections.abc import Iterator
 from typing import NamedTuple
 
 from .test import Test
+from .test import TestResult
 from .types import Branch
-from .types import Success
 
 
 class TestReport(NamedTuple):
     branch: Branch
-    tests: dict[Test, Success]
+    results: tuple[TestResult, ...]
 
     @classmethod
     def from_tests(cls, branch: Branch, tests: Iterable[Test]):
         """Run the tests, record results."""
-        return cls(branch=branch, tests={test: test() for test in tests})
+        return cls(
+            branch=branch, results=tuple(test.result() for test in tests)
+        )
 
-    # tests: list[Test]
+    def __iter__(  # pyright: ignore[reportIncompatibleMethodOverride]
+        self,
+    ) -> Iterator[Test]:
+        for test, success in self.results:
+            del success
+            yield test

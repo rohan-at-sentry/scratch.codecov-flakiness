@@ -1,58 +1,36 @@
 from __future__ import annotations
 
-from collections.abc import Iterable
-from dataclasses import dataclass
-from fractions import Fraction
-from typing import NamedTuple
+from enum import Enum
 
+from .flake_detection_db import FlakeDetectionDB
 from .test import Test
 from .test_report import TestReport
 
 
-@dataclass
-class TestAnalysis:
-    ran: int
-    failed: int
+class CategoryReason(Enum):
+    # These are PR-relevant
+    PASSING = "test is passing in main branch"
 
-    def is_flaky(self):
-        return 0 < self.failure_rate < 1
-
-    @property
-    def failure_rate(self) -> Fraction:
-        return Fraction(self.failed, self.ran)
+    # PR irrelevant statuses
+    BROKEN = "broken in main branch"
+    FLAKY = "flake seen in main branch"
 
 
-class FlakeDetectionDB(NamedTuple):
-    flakes: set[Test]
-
-    @classmethod
-    def build(cls, test_history: Iterable[TestReport]):
-        db: dict[Test, TestAnalysis] = {}
-
-        for test_report in test_history:
-            for test, success in test_report.tests.items():
-
-                if test in db:
-                    analysis = db[test]
-                else:
-                    analysis = db[test] = TestAnalysis(0, 0)
-
-                analysis.ran += 1
-                analysis.failed += 0 if success else 1
-
-        return cls(
-            flakes={
-                test for test, analysis in db.items() if analysis.is_flaky()
-            }
-        )
+class TestResultCategorization(dict[CategoryReason, set[Test]]):
+    def __missing__(self, key: CategoryReason) -> set[Test]:
+        return self.setdefault(key, set())
 
 
 def flakiness_detection(
     test_history: list[TestReport], test_report: TestReport
-) -> Iterable[Test]:
+) -> TestResultCategorization:
 
     flake_detection_db = FlakeDetectionDB.build(test_history)
 
-    for test in test_report.tests:
+    result = TestResultCategorization()
+
+    for test in test_report:
         if test in flake_detection_db.flakes:
-            yield test
+            result[CategoryReason.FLAKY].add(test)
+
+    return result

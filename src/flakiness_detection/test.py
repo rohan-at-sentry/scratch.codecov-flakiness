@@ -6,6 +6,11 @@ from typing import NamedTuple
 from .types import Success
 
 
+class TestResult(NamedTuple):
+    test: Test
+    result: Success
+
+
 class Test(NamedTuple):
 
     func: Callable[[], None]
@@ -14,10 +19,13 @@ class Test(NamedTuple):
     def name(self):
         return self.func.__name__
 
-    def __call__(self) -> Success:
+    def result(self) -> TestResult:
         try:
             self.func()
         except AssertionError:
-            return False
+            return TestResult(self, False)
         else:
-            return True
+            return TestResult(self, True)
+
+    def __call__(self) -> None:
+        return self.func()

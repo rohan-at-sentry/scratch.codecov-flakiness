@@ -1,7 +1,9 @@
 #!/usr/bin/env pytest
 from __future__ import annotations
 
+from ..flakiness_detection import CategoryReason
 from ..flakiness_detection import flakiness_detection
+from ..test import TestResult
 from ..test_report import TestReport
 from ..testing import fake_test
 from ..types import Branch
@@ -19,21 +21,21 @@ class DescribeBasicFlakinessDetection:
 
         test_results = TestReport.from_tests(Branch.PR, tests)
         flakes = flakiness_detection(PR_HISTORY, test_results)
-        assert list(flakes) == [fake_test.fifty_fifty]
+        assert flakes == {CategoryReason.FLAKY: {fake_test.fifty_fifty}}
 
     def it_never_detects_passing_test(self):
         tests = [fake_test.passing]
 
         test_results = TestReport.from_tests(Branch.PR, tests)
         flakes = flakiness_detection(PR_HISTORY, test_results)
-        assert list(flakes) == []
+        assert flakes == {}
 
     def it_never_detects_failing_test(self):
         tests = [fake_test.failing]
 
         test_results = TestReport.from_tests(Branch.PR, tests)
         flakes = flakiness_detection(PR_HISTORY, test_results)
-        assert list(flakes) == []
+        assert flakes == {}
 
 
 class DescribeBranchBehavior:
@@ -47,6 +49,16 @@ class DescribeBranchBehavior:
         A test that's broken in main is not relevant to merging the current PR,
         and so should not be counted as a relevant-and-failing test.
         """
+        tests = [fake_test.failing]
+
+        test_results = TestReport.from_tests(Branch.PR, tests)
+        test_history = [
+            TestReport(
+                Branch.main, results=(TestResult(fake_test.failing, False),)
+            )
+        ]
+        flakes = flakiness_detection(test_history, test_results)
+        assert list(flakes) == []
 
     def it_discounts_flakes_seen_in_main(self):
         """
