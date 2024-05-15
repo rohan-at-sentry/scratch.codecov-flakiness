@@ -1,7 +1,11 @@
+# runtime requirements
+pandas
+
+# testing
 hypothesis
 pytest
 
-
+# developer environment
 black
 isort
 pre-commit

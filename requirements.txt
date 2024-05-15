@@ -30,10 +30,14 @@ nodeenv==1.8.0
     # via
     #   pre-commit
     #   pyright
+numpy==1.26.4
+    # via pandas
 packaging==24.0
     # via
     #   black
     #   pytest
+pandas==2.2.2
+    # via -r requirements.in
 pathspec==0.12.1
     # via black
 platformdirs==4.2.2
@@ -48,10 +52,18 @@ pyright==1.1.363
     # via -r requirements.in
 pytest==8.2.0
     # via -r requirements.in
+python-dateutil==2.9.0.post0
+    # via pandas
+pytz==2024.1
+    # via pandas
 pyyaml==6.0.1
     # via pre-commit
+six==1.16.0
+    # via python-dateutil
 sortedcontainers==2.4.0
     # via hypothesis
+tzdata==2024.1
+    # via pandas
 virtualenv==20.26.2
     # via pre-commit
 
