@@ -56,8 +56,8 @@ norecursedirs = [
     "**/scratch",
 ]
 python_files = ["*.py"]
-python_classes = ["Test", "Describe"]
-python_functions = ["test", "it"]
+python_classes = ["Describe"]
+python_functions = ["it"]
 
 
 [tool.pyright]
