@@ -16,7 +16,7 @@ distlib==0.3.8
     # via virtualenv
 filelock==3.14.0
     # via virtualenv
-hypothesis==6.102.1
+hypothesis==6.102.4
     # via -r requirements.in
 identify==2.5.36
     # via pre-commit
@@ -36,7 +36,7 @@ packaging==24.0
     #   pytest
 pathspec==0.12.1
     # via black
-platformdirs==4.2.1
+platformdirs==4.2.2
     # via
     #   black
     #   virtualenv
@@ -44,7 +44,7 @@ pluggy==1.5.0
     # via pytest
 pre-commit==3.7.1
     # via -r requirements.in
-pyright==1.1.362
+pyright==1.1.363
     # via -r requirements.in
 pytest==8.2.0
     # via -r requirements.in

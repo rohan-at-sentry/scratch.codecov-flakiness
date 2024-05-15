@@ -1,9 +1,9 @@
 #!/usr/bin/env pytest
 from __future__ import annotations
 
-from . import fake_test
-from .flakiness_detection import flakiness_detection
-from .test_report import TestReport
+from ..flakiness_detection import flakiness_detection
+from ..test_report import TestReport
+from ..testing import fake_test
 
 TEST_HISTORY: list[TestReport] = []
 
@@ -37,10 +37,17 @@ class DescribeFlakinessDetection:
 
 
 class DescribeBranchBehavior:
-    def it_doesnt_flag_a_test_broken_in_main(self): ...
+    def it_discounts_tests_broken_in_main(self):
+        """
+        A test that's broken in main is not relevant to merging the current PR,
+        and so should not be counted as a relevant-and-failing test.
+        """
+        ...
 
 
 class DescribeHistoryBehavior:
     def it_never_detects_a_passing_test_even_if_it_was_previously_a_flake(
         self,
-    ): ...
+    ):
+        """ """
+        ...

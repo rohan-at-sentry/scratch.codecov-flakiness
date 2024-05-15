@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from .test import Test
+from ..test import Test
 
 
 @Test
