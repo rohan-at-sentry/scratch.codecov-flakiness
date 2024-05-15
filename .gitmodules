@@ -1,0 +1,3 @@
+[submodule "vendor/pandas-stubs"]
+	path = vendor/pandas-stubs
+	url = git@github.com:bukzor/pandas-stubs.git
