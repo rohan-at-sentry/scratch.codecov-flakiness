@@ -6,16 +6,6 @@ from typing import NamedTuple
 from hypothesis import strategies as st
 
 
-class Commit(NamedTuple):
-    sha: SHA
-
-    # this is the "tip" sha of a PR that was merged/rebased to main
-    pr_accepted: bool
-
-
-commit_st = st.from_type(Commit)
-
-
 class SHA(IntEnum):
     BEEF = 0xBEEF
     BAAD = 0xBAAD
@@ -27,3 +17,15 @@ class SHA(IntEnum):
 
 
 SHA_st = st.from_type(SHA)
+
+
+class Commit(NamedTuple):
+    sha: SHA
+
+    # this is the "tip" sha of a PR that was merged/rebased to main
+    pr_accepted: bool
+
+
+@st.composite
+def commits_st(draw, sha=st.from_type(SHA), pr_accepted=st.booleans()):
+    return Commit(draw(sha), draw(pr_accepted))

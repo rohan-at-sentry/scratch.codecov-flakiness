@@ -7,7 +7,7 @@ from hypothesis import strategies as st
 from . import branch
 from . import test
 from .commit import Commit
-from .commit import commit_st
+from .commit import commits_st
 
 
 class TestReport(NamedTuple):
@@ -21,10 +21,10 @@ results_st = st.lists(test.result_st).map(tuple)
 
 
 @st.composite
-def test_reports(
+def test_reports_st(
     draw: st.DrawFn,
     branch=branch.name_st,
-    commit=commit_st,
+    commit=commits_st,
     results=results_st,
 ):
 
