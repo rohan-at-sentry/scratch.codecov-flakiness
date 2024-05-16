@@ -1,0 +1,3 @@
+[submodule "vendor/--force"]
+	path = vendor/pandas-stubs
+	url = git@github.com:bukzor/pandas-stubs

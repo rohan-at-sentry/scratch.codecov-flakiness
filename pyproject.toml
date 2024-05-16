@@ -47,7 +47,7 @@ norecursedirs = [
 
     # home for files with separate version control
     "**/repo",
-    "**/vendor",
+    ##"**/vendor",
 
     # dirty hax
     "**/tmp*",
@@ -79,7 +79,7 @@ exclude = [
 
     # home for files with separate version control
     "**/repo",
-    "**/vendor",
+    ##"**/vendor",
 
     # dirty hax
     "**/tmp*",

@@ -11,5 +11,6 @@ python3.12 -m venv --upgrade-deps venv
 
 
 ./venv/bin/pre-commit install
+touch venv/
 
 # vim:ft=bash:

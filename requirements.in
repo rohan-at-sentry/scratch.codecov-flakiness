@@ -1,12 +1,20 @@
-# runtime requirements
-pandas
-
 # testing
 hypothesis
 pytest
+
 
 # developer environment
 black
 isort
 pre-commit
+
+# debugging
+pudb
+
+# typing
 pyright
+-e ./vendor/pandas-stubs
+matplotlib
+xarray
+types-openpyxl
+types-python-dateutil

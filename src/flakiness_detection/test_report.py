@@ -10,6 +10,8 @@ from .types import Branch
 
 
 class TestReport(NamedTuple):
+    """This represents users' input: a json report of test failures."""
+
     branch: Branch
     results: tuple[TestResult, ...]
 

@@ -1,2 +1,0 @@
-all:
-	redo ./spec/all
