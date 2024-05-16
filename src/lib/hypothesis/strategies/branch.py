@@ -3,8 +3,7 @@ from __future__ import annotations
 from enum import Enum
 from typing import NamedTuple
 
-from hypothesis import assume
-from hypothesis import given
+import hypothesis as H
 from hypothesis import strategies as st
 
 from . import commit
@@ -14,18 +13,21 @@ class Name(Enum):
     main = "main"
     PR = "PR"
 
+    def __repr__(self):
+        return f"branch.Name.{self._value_}"
+
 
 name_st = st.from_type(Name)
 
 
-@given(name_st)
+@H.given(name_st)
 def it_is_sometimes_main(branch_name: Name):
-    assume(branch_name is Name.main)
+    H.assume(branch_name is Name.main)
 
 
-@given(name_st)
+@H.given(name_st)
 def it_is_sometimes_PR(branch_name: Name):
-    assume(branch_name is Name.PR)
+    H.assume(branch_name is Name.PR)
 
 
 class Commits(NamedTuple):
@@ -34,9 +36,11 @@ class Commits(NamedTuple):
     commits: tuple[commit.SHA, ...]
 
 
-commits_st = st.builds(Commits, name_st, st.lists(commit.SHA_st))
+commits_st = st.builds(Commits, name_st, st.lists(commit.SHA_st, unique=True))
 
 
-@given(commits_st)
-def it_is_has_commits(branch_commits: Commits):
-    assume(branch_commits.commits)
+@H.given(commits_st)
+def it_sometimes_has_a_BAAD_commit(branch_commits: Commits):
+    print(branch_commits)
+    H.assume(branch_commits.commits)
+    H.assume(commit.SHA.BAAD in branch_commits.commits)
