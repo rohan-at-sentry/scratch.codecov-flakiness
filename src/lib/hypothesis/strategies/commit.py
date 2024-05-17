@@ -17,6 +17,7 @@ class SHA(IntEnum):
 
 
 SHA_st = st.from_type(SHA)
+booleans_st = st.booleans()
 
 
 class Commit(NamedTuple):
@@ -27,5 +28,5 @@ class Commit(NamedTuple):
 
 
 @st.composite
-def commits_st(draw, sha=st.from_type(SHA), pr_accepted=st.booleans()):
+def commits_st(draw: st.DrawFn, sha=SHA_st, pr_accepted=booleans_st):
     return Commit(draw(sha), draw(pr_accepted))

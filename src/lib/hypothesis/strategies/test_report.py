@@ -18,6 +18,7 @@ class TestReport(NamedTuple):
 
 
 results_st = st.lists(test.result_st).map(tuple)
+commits_st = commits_st()
 
 
 @st.composite
