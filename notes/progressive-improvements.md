@@ -34,6 +34,7 @@
     - a 1% flake might be fixed after 1000 passes
     - cost estimate: we'd need to start tracking flake-percentage for each
       flake, would need a new table
+    - this will be integrated into the "test failures" project
 
 ## M? "errors matter"
 

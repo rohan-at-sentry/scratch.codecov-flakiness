@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from enum import IntEnum
-from typing import NamedTuple
 
 from hypothesis import strategies as st
 
@@ -18,15 +17,3 @@ class SHA(IntEnum):
 
 SHA_st = st.from_type(SHA)
 booleans_st = st.booleans()
-
-
-class Commit(NamedTuple):
-    sha: SHA
-
-    # this is the "tip" sha of a PR that was merged/rebased to main
-    pr_accepted: bool
-
-
-@st.composite
-def commits_st(draw: st.DrawFn, sha=SHA_st, pr_accepted=booleans_st):
-    return Commit(draw(sha), draw(pr_accepted))

@@ -6,6 +6,7 @@ from typing import NamedTuple
 from .flake import Flake
 from .strategies import branch
 from .strategies import test
+from .strategies.commit import SHA
 from .strategies.test_history import TestHistory
 
 
@@ -20,6 +21,7 @@ class InterestingStuff(NamedTuple):
 def flakiness_detection(
     # test_report: TestReport,  # for later
     test_history: TestHistory,
+    commits_merged: set[SHA],
 ) -> InterestingStuff:
     """
     Given a user's test report plus the historical data of tests from the same
@@ -30,7 +32,8 @@ def flakiness_detection(
 
     for report in test_history:
         if not (
-            report.branch == branch.Name.main or report.commit.pr_accepted
+            report.branch == branch.Name.main
+            or report.commit in commits_merged
         ):
             continue  # this report is main-irrelevant
 
