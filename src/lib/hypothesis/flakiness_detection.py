@@ -6,6 +6,7 @@ from typing import NamedTuple
 from .flake import Flake
 from .strategies import test
 from .strategies.test_history import TestHistory
+from .strategies import branch
 
 
 class InterestingStuff(NamedTuple):
@@ -25,20 +26,20 @@ def flakiness_detection(
     repo (the same PR and main branch), we can tell the user some interesting
     stuff.
     """
-    flaky_tests_in_main = set()
+    flaky_tests_in_main: set[Flake] = set()
 
     for report in test_history:
-        # if report.branch_name
-        for result in report.results:
-            if result.state == test.State.FAIL:
-                flaky_tests_in_main.add(
-                    Flake(
-                        test=result.test,
-                        flakiness=0,
-                        first_seen=datetime(1, 1, 1),
-                        last_seen=datetime(1, 1, 1),
-                        expired=True,
+        if report.branch == branch.Name.main:
+            for result in report.results:
+                if result.state == test.State.FAIL:
+                    flaky_tests_in_main.add(
+                        Flake(
+                            test=result.test,
+                            flakiness=0,
+                            first_seen=datetime(1, 1, 1),
+                            last_seen=datetime(1, 1, 1),
+                            expired=True,
+                        )
                     )
-                )
 
     return InterestingStuff(frozenset(flaky_tests_in_main))
