@@ -15,23 +15,16 @@ from .strategies import branch
 from .strategies import test
 from .strategies.commit import SHA
 from .strategies.commit import Commit
+from .strategies.commit import commits_st
 from .strategies.test_history import TestHistory
 from .strategies.test_report import TestReport
 
 
 class FlakinessDetectionStates(RuleBasedStateMachine):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, initial_init=True):
+        if initial_init:
+            super().__init__()
 
-        self.current_branch: branch.Name = branch.Name.main
-        self.commits: list[Commit] = [Commit(SHA.BAAD, pr_accepted=False)]
-        # self.test_reports: dict[branch.Name, list[TestReport]] = {}
-        self.test_history: TestHistory = []
-
-        self.should_be_flaky = set(test.Name)
-
-    @initialize()
-    def start(self):
         # self.current_branch: branch.Name = branch.Name.main
         self.commits: list[Commit] = [Commit(SHA.BAAD, pr_accepted=False)]
         # self.test_reports: dict[branch.Name, list[TestReport]] = {}
@@ -39,21 +32,37 @@ class FlakinessDetectionStates(RuleBasedStateMachine):
 
         self.should_be_flaky: set[test.Name] = set()
 
+    @initialize()
+    def start(self):
+        self.__init__(initial_init=False)
+
     ### @rule()
     ### def submit_results(self): ...
 
+    @rule(commit=commits_st())
+    def commit(self, commit: Commit):
+        self.commits.append(commit)
+
     @rule(
-        branch=branch.name_st, test_name=test.name_st, test_state=test.state_st
+        branch_name=branch.name_st,
+        test_name=test.name_st,
+        test_state=test.state_st,
     )
     def run_test(
-        self, branch: branch.Name, test_name: test.Name, test_state: test.State
+        self,
+        branch_name: branch.Name,
+        test_name: test.Name,
+        test_state: test.State,
     ):
         test_result = test.Result(test_name, test_state)
+        commit = self.commits[-1]
         self.test_history.append(
-            TestReport(branch, self.commits[-1], (test_result,))
+            TestReport(branch_name, commit, (test_result,))
         )
 
-        if test_state == test.State.FAIL:
+        if (
+            branch_name == branch.Name.main or commit.pr_accepted
+        ) and test_state == test.State.FAIL:
             self.should_be_flaky.add(test_name)
 
     @invariant()

@@ -4,9 +4,9 @@ from datetime import datetime
 from typing import NamedTuple
 
 from .flake import Flake
+from .strategies import branch
 from .strategies import test
 from .strategies.test_history import TestHistory
-from .strategies import branch
 
 
 class InterestingStuff(NamedTuple):
@@ -29,17 +29,21 @@ def flakiness_detection(
     flaky_tests_in_main: set[Flake] = set()
 
     for report in test_history:
-        if report.branch == branch.Name.main:
-            for result in report.results:
-                if result.state == test.State.FAIL:
-                    flaky_tests_in_main.add(
-                        Flake(
-                            test=result.test,
-                            flakiness=0,
-                            first_seen=datetime(1, 1, 1),
-                            last_seen=datetime(1, 1, 1),
-                            expired=True,
-                        )
+        if not (
+            report.branch == branch.Name.main or report.commit.pr_accepted
+        ):
+            continue  # this report is main-irrelevant
+
+        for result in report.results:
+            if result.state == test.State.FAIL:
+                flaky_tests_in_main.add(
+                    Flake(
+                        test=result.test,
+                        flakiness=0,
+                        first_seen=datetime(1, 1, 1),
+                        last_seen=datetime(1, 1, 1),
+                        expired=True,
                     )
+                )
 
     return InterestingStuff(frozenset(flaky_tests_in_main))
