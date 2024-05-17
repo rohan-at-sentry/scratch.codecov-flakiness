@@ -32,7 +32,7 @@ class FlakinessDetectionStates(RuleBasedStateMachine):
 
     @initialize()
     def start(self):
-        self.current_branch: branch.Name = branch.Name.main
+        # self.current_branch: branch.Name = branch.Name.main
         self.commits: list[Commit] = [Commit(SHA.BAAD, pr_accepted=False)]
         # self.test_reports: dict[branch.Name, list[TestReport]] = {}
         self.test_history: TestHistory = []
@@ -42,12 +42,15 @@ class FlakinessDetectionStates(RuleBasedStateMachine):
     ### @rule()
     ### def submit_results(self): ...
 
-    @rule(data=st.data(), test_name=test.name_st)
-    def run_test(self, data: st.DataObject, test_name: test.Name):
-        test_state = data.draw(test.state_st)
+    @rule(
+        branch=branch.name_st, test_name=test.name_st, test_state=test.state_st
+    )
+    def run_test(
+        self, branch: branch.Name, test_name: test.Name, test_state: test.State
+    ):
         test_result = test.Result(test_name, test_state)
         self.test_history.append(
-            TestReport(self.current_branch, self.commits[-1], (test_result,))
+            TestReport(branch, self.commits[-1], (test_result,))
         )
 
         if test_state == test.State.FAIL:
