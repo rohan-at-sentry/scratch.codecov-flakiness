@@ -37,20 +37,33 @@ codecov capabilities:
 
   - Our guess is no.
 
+`merge workflow`:
+
 ```
-1 -- flake?
+4 -- flake? (conservatively: no, simplisitically: yes)
 |\
-| 2 x -- passed
-| 3 y -- failed
+| 3 x -- passed -- fixed?
+| 2 y -- failed & passed -- flake!
 |/
-4
+1
 ```
 
 ```
-1 C
-2 A x -- passed
-3 A ~y -- failed~
-4 B
+4 -- flake? yes.
+|\
+| 3 x -- failed & passed -- flake!
+| 2 y -- failed & passed -- flake!
+|/
+1
+```
+
+`rebase workflow`:
+
+```
+4 C -- flake?
+3 A x -- passed
+2 A ~y -- failed~
+1 B
 ```
 
 ## Future Improvements?
