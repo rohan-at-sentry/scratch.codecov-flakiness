@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from collections import deque
+
 import hypothesis as H
 
 # from hypothesis.stateful import precondition
@@ -30,6 +32,7 @@ class FlakinessDetectionStates(RuleBasedStateMachine):
         # self.test_reports: dict[branch.Name, list[TestReport]] = {}
         self.test_history: TestHistory = []
         self.commits_merged: set[SHA] = set()
+        self.test_status_history: dict[test.Name, deque[test.State]]
 
         self.should_be_flaky: set[test.Name] = set()
 
@@ -83,7 +86,7 @@ class FlakinessDetectionStates(RuleBasedStateMachine):
     @invariant()
     def check_flakiness(self):
         flake_report = flakiness_detection(
-            self.test_history, self.commits_merged
+            self.test_history, self.commits_merged, flakiness_expiry=2
         )
 
         assert {

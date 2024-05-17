@@ -22,6 +22,7 @@ def flakiness_detection(
     # test_report: TestReport,  # for later
     test_history: TestHistory,
     commits_merged: set[SHA],
+    flakiness_expiry: int = 30,
 ) -> InterestingStuff:
     """
     Given a user's test report plus the historical data of tests from the same
