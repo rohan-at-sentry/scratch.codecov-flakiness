@@ -16,6 +16,13 @@ class TestReport(NamedTuple):
 
     results: tuple[test.Result, ...]
 
+    def get_state(self, test: test.Name, default: test.State) -> test.State:
+        for result in self.results:
+            if result.test.name == test.name:
+                return result.state
+        else:
+            return default
+
 
 results_st = st.lists(test.result_st).map(tuple)
 
