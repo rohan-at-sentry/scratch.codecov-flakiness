@@ -1,6 +1,6 @@
 # Milestones
 
-## M0 "What Datadog does"
+## M0 "What competitors do"
 
 - a test report is "main branch" iff SHA appears on main history
   - only merge workflows have full support, this way
